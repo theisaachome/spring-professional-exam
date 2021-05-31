@@ -1,0 +1,20 @@
+/.metadata/
+
+
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+*/.project
+*/.classpath
+*/.settings
+*/target
+*/.project
+*/bin
+*/Users/
