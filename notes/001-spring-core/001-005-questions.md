@@ -114,6 +114,7 @@
 - is a central part of Spring application.
 - represents the Spring IoC container and
 - is responsible for instantiating, configuring, and assembling the beans.
+- It uses dependency injection to achieve inversion of control.
 
 
 **`ApplicationContext`**
@@ -121,12 +122,12 @@
   - Configures Beans
   - Assemblies Beans
   - Manages Beans Lifecycle
-  - is a `BeanFactory`
+  - is a BeanFactory
   - is a Resource Loader
   - Has ability to push events to registered even listeners
   - Exposes Environment which allows to resolve properties
 
-### **Common Application Context types:**
+### **Common ApplicationContext types:**
   - AnnotationConfigApplicationContext
   - AnnotationConfigWebApplicationContext
   - ClassPathXmlApplicationContext
@@ -135,12 +136,10 @@
 
 ---
 
+
 ### **Question 05**
 
 ### What is the concept of a **`Container`**?
-
-- The BeanFactory interface is the central IoC container interface in Spring.
-- Its responsibilities include instantiating or sourcing application objects, configuring such objects, and assembling the dependencies between these objects.
 
   - An execution environment which provides additional technical services for your code to use. 
   - Containers use IoC technique,
