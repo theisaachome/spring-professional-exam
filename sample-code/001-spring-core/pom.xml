@@ -9,8 +9,9 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<maven.complier.target>17</maven.complier.target>
+		
 		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	
     <dependencyManagement>
@@ -55,4 +56,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <modules>
+    	<module>001-question-dependency-injection</module>
+    </modules>
 </project>
