@@ -40,7 +40,8 @@
 ---
 
 ### **Question 02**
-- ### What is a pattern? What is an anti- pattern? Is dependency injection a pattern?
+
+### What is a pattern? What is an anti-pattern?
 
   - A reusable solution to often, commonly occurring problem in software design.
 
@@ -57,6 +58,9 @@
   - Visitor
   - Facade
   - Composite
+
+### Is dependency injection a pattern?
+
 - Dependency Injection is a pattern that solves problem of flexible dependencies creation.
 
 - Anti-pattern is ineffective and counter-productive solution to often occurring problem.
@@ -166,9 +170,9 @@
   - resolve property values and inject dependencies.
   - BeanPostProcessors are called.
   - Application Runs.
-  - Applicationgetsshutdown.
-  - SpringContextisclosed.
-  - Destructioncallbacksareinvoked.
+  - Application gets shutdown.
+  - Spring Context is closed.
+  - Destruction callbacks are invoked.
 
 
 ----
