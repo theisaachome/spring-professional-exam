@@ -59,5 +59,6 @@
     <modules>
     	<module>001-question-dependency-injection</module>
     	<module>004-question-ApplicationContext</module>
+    	<module>000-xml-config-example</module>
     </modules>
 </project>
