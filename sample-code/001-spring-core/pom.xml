@@ -60,5 +60,7 @@
     	<module>001-question-dependency-injection</module>
     	<module>004-question-ApplicationContext</module>
     	<module>000-xml-config-example</module>
+    	<module>001-the-context-demo</module>
+    	<module>001-spring-context</module>
     </modules>
 </project>
