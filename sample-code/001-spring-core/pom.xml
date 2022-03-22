@@ -62,5 +62,6 @@
     	<module>000-xml-config-example</module>
     	<module>001-the-context-demo</module>
     	<module>001-spring-context</module>
+    	<module>spring-annotation-study</module>
     </modules>
 </project>
