@@ -15,12 +15,10 @@
 
 ### What is dependency injection?
 
+- It is a process whereby objects define their dependencies.
+- An object or framework provide concrete dependencies to the objects.
 - The Inversion of Control (IoC) principle, `IoC` is also known as dependency injection (DI).
 
-- It is a process whereby objects define their dependencies.
-
-- An object or framework provide concrete
-    dependencies to the objects.
 
 **Types of Dependency Injection:**
   - Constructor injection
@@ -41,13 +39,13 @@
 
 ### **Question 02**
 
-### What is a pattern? What is an anti-pattern?
+### **What is a pattern?**
+A Software Design Pattern is a reusable solution to often, commonly occurring problem in software design. 
 
-  - A reusable solution to often, commonly occurring problem in software design.
+It is a high level description on how to solve the problem, that can be used in many different situations. 
 
-  - It is a high level description on how to solve the problem
+Design patterns often represent best practices that developers can use to solve common problems.
 
-  - Design patterns often represent best practices that developers can use to solve common problems.
 
 - Commonly used design patterns from GoF Design Patterns:
   - FactoryMethod
@@ -63,8 +61,10 @@
 
 - Dependency Injection is a pattern that solves problem of flexible dependencies creation.
 
+### **What is an anti-pattern?**
 - Anti-pattern is ineffective and counter-productive solution to often occurring problem.
-  Examples of Anti-patterns in Object Oriented Programming:
+
+Examples of Anti-patterns in Object Oriented Programming:
   - God Object
   - Sequential coupling
   - Circular dependency
@@ -95,13 +95,15 @@
   - Static methods
   - Nested types
 
-## What are the advantages of making use of them in Java? Why are they recommended for Spring beans?
+### **What are the advantages of making use of them in Java?**
 
 - Advantages of using interfaces in Java:
   - Allows decoupling between contract and its implementation
   - Allows declaring contract between callee and caller
   - Increases interchangeability
   - Increases testability
+
+### **Why are they recommended for Spring beans?**
 - Advantages of using interfaces in Spring:
   - Allows for use of JDK Dynamic Proxy
   - Allows implementation hiding
@@ -146,18 +148,15 @@
 ### What is the concept of a **`Container`**?
 
   - An execution environment which provides additional technical services for your code to use. 
-  - Containers use IoC technique,
-  that allows you to focus on creating business aspect of the code,
+  - Containers use IoC technique, that allows you to focus on creating business aspect of the code,
   - while technical aspects like communication details (HTTP, REST, SOAP) are provided by execution environment.
 
 
-- Spring provides a container for beans.
+- Spring provides a container for beans. It manages lifecycle of the beans and provides additional services through usage of `ApplicationContext`.
 
-- It manages lifecycle of the beans and 
 
-- provides additional services through usage of `ApplicationContext`.
 
-- ### **What is its lifecycle?**
+### **What is its lifecycle?**
 
 - Spring Container Lifecycle:
   - Application is started.
@@ -166,8 +165,7 @@
   - Beans definitions are created from configuration.
   - BeanFactoryPostProcessors are processing bean definitions.
   - Instances of Spring Beans are created.
-  - Spring Beans are configured and assembled
-  - resolve property values and inject dependencies.
+  - Spring Beans are configured and assembled - resolve property values and inject dependencies.
   - BeanPostProcessors are called.
   - Application Runs.
   - Application gets shutdown.

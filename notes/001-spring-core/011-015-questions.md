@@ -14,85 +14,113 @@
 
 ### **Question 11**
 
--  **Are beans lazily or eagerly instantiated by default?** 
+## **Are beans lazily or eagerly instantiated by default?** 
 
 
-- **Lazy and Eager Instance Creation vs Scope Type:**
+### **Lazy and Eager Instance Creation vs Scope Type:**
 
-  - Singleton Beans are eagerly instantiated by default
-  - Prototype Beans are lazily instantiated by default
-    - (instance is created when bean is requested)
-
-  - if Singleton Bean has dependency on Prototype Bean,
-  - then Prototype Bean Instance will be created eagerly to satisfy dependencies for Singleton Bean.
-
-
-### **How do you alter this behavior?**
-
-- **Altering Behavior:**
-
-- You can change default behavior for all beans by `@ComponentScan` annotation
+- `Singleton` Beans are eagerly instantiated by default.
+  ```java
+  @Component //by default it is singleton bean
+  public class SpringBean {}
+  ```
+- `Prototype` Beans are lazily instantiated by default.
 
   ```java
+  @Component
+  @Scope("prototype")
+  public class SpringBean {}
+  ```
+- (instance is created when bean is requested)
+  ```java
+  context.getBean(SpringBean.class);
+  ```
+
+If Singleton Bean has dependency on Prototype Bean,then Prototype Bean Instance will be created eagerly to satisfy dependencies for Singleton Bean.
+
+```java
+@Component
+public class StudentService {
+    @Autowired
+    private StudentRepo studentRepo;
+}
+@Component
+@Scope("prototype")
+public class StudentRepo {}
+// StudentRepo is created early to satisfy dependencies
+```
+
+
+## **How do you alter this behavior?**
+
+### **Altering Behavior:**
+
+### 1. You can change default behavior for all beans by `@ComponentScan` annotation
+
+  ```java
+  //by default lazyInit is false
   @ComponentScan(lazyInit = true)
   public class ApplicationConfiguration {}
   ```
-  - Setting lazyInit to true, will make all beans lazy, even Singleton Beans
+  - Setting `lazyInit` to true, will make all beans lazy, even Singleton Beans
 
-  - Setting lazyInit to false (default), will create Singleton Beans Eagerly and Prototype Beans Lazily
+  - Setting `lazyInit` to false (default), will create Singleton Beans Eagerly and Prototype Beans Lazily.
 
-- You can also change default behavior by using `@Lazy` annotation:
 
-- `@Lazy` annotation takes one parameter - Whether lazy initialization should occur
+### 2. You can also change default behavior by using `@Lazy` annotation:
 
-  - By default `@Lazy` is used to mark bean as lazily instantiated
+- By default `@Lazy` is used to mark bean as lazily instantiated
   ```java
   @Component
   @Lazy
   public class Computer {}
   ```
-  - You can use `@Lazy(false)` to force Eager Instantiation – use case for `@ComponentScan(lazyInit = true)` when some beans always needs to be instantiated eagerly
+
+
+- `@Lazy` annotation takes one parameter .Whether lazy initialization should occur.
+
+- You can use `@Lazy(false)` to force Eager Instantiation.  
+
+- use case for `@ComponentScan(lazyInit = true)` when some beans always needs to be instantiated eagerly.
+
   ```java
   @Component
   @Lazy(false)
   public class Computer {}
   ```
 
-- `@Lazy` can be applied to:
+### 3. `@Lazy` can be applied to:
 
-  - Classed annotated with `@Component` – makes bean Lazy or as specified by `@Lazy` parameter
- ```java
-@Component
-@Lazy
-public class Computer {}
-```
-- Classes annotated with `@Configuration` annotation
+- Classed annotated with `@Component`. Makes bean Lazy or as specified by `@Lazy` parameter
+  ```java
+  @Component
+  @Lazy
+  public class Computer {}
+  ```
+- Classes annotated with `@Configuration` annotation to make all beans provided by configuration lazy or as specified by `@Lazy` parameter.
+  ```java
+  @Configuration
+  @Lazy
+  public class ApplicationConfiguration {
+      @Bean
+      public SpringBean springBean() {
+          return new SpringBean();
+      }
+  }
+  ```
 
-- Make all beans provided by configuration lazy or as specified by `@Lazy` parameter
-```java
-@Configuration
-@Lazy
-public class ApplicationConfiguration {
-    @Bean
-    public SpringBean7 springBean7() {
-        return new SpringBean7();
-    }
-}
-
-```
-- Method annotated with `@Bean` annotation
-- makes bean created by method Lazy or as specified by `@Lazy` parameter
-```java
-@Configuration
-@Lazy
-public class ApplicationConfiguration {
-    @Bean
-    @Lazy(value = false)
-    public SpringBean7 springBean7() {
-        return new SpringBean7();
-    }
-}
-```
+- `Method` annotated with `@Bean` annotation. Makes bean created by method Lazy or as specified by `@Lazy` parameter.
+  ```java
+  @Configuration
+  @Lazy
+  public class ApplicationConfiguration {
+      @Bean
+      @Lazy(value = false)
+      public SpringBean springBean() {
+          return new SpringBean();
+      }
+  }
+  ```
 ---
 
 ### **Question 12**
