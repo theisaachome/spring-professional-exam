@@ -182,9 +182,10 @@ public class SpringBean {
 
 ## **What is a `BeanFactoryPostProcessor`?.** 
 
-`BeanFactoryPostProcessor` is an interface that contains single method postProcessBeanFactory, implementing it allows you to create logic that will modify Spring Bean Metadata before any Bean is created.
+`BeanFactoryPostProcessor` is an interface that contains single method `postProcessBeanFactory`, implementing it allows you to create logic that will modify Spring Bean Metadata before any Bean is created.
 
 ##  **What is it used for?** 
+
 `BeanFactoryPostProcessor` does not create any beans, however it can access and alter Metadata that is used later to create Beans.
 
 ##  **When is it invoked?**
@@ -235,9 +236,10 @@ It is used on fields annotated with `@Value("${property_name}")`.
 ----------
 
 ## **Question 14** 
-## **What is a BeanPostProcessor?.** 
+## **What is a BeanPostProcessor?** 
 
 `BeanPostProcessor` is an interface that allows you to create extensions to Spring Framework that will modify Spring Beans objects during initialization.   
+
 This interface contains two methods:
   - `postProcessBeforeInitialization`
 
@@ -305,45 +307,64 @@ You can declare destroy method in following ways:
 ## **When/how will they (initialization, destroy methods) get called?**
 1. Context is Created:
     - Beans Definitions are created based on Spring Bean Configuration.
-    - BeanFactoryPostProcessors are invoked.
+    - `BeanFactoryPostProcessors` are invoked.
+
 2. Bean is Created:
     - Instance of Bean is Created.
     - Properties and Dependencies are set.
-    - BeanPostProcessor::postProcessBeforeInitialization gets called.
-    - @PostConstruct method gets called.
-    - InitializingBean::afterPropertiesSet method gets called.
-    - @Bean(initMethod) method gets called
-    - BeanPostProcessor::postProcessAfterInitialization gets called.
+    - `BeanPostProcessor::postProcessBeforeInitialization` gets called.
+    - `@PostConstruct` method gets called.
+    - `InitializingBean::afterPropertiesSet` method gets called.
+    - `@Bean(initMethod)` method gets called
+    - `BeanPostProcessor::postProcessAfterInitialization` gets called.
+
 3. Bean is Ready to use.
+
 4. Bean is Destroyed (usually when context is closed):
-    - @PreDestroy method gets called.
-    - DisposableBean::destroy method gets called.
-    - @Bean(destroyMethod) method gets called.
+    - `@PreDestroy` method gets called.
+    - `DisposableBean::destroy` method gets called.
+    - `@Bean(destroyMethod)` method gets called.
 
 -------
 
 ## **Question 15**
-## **What does component-scanning do?**
-- ComponentScanning
-  - Process in which Spring is scanning Classpath
-  - in search for classes annotated with stereotypes annotations 
-    - @Component, 
-    - @Repository, 
-    - @Service, 
-    - @Controller, ...and 
-  - based on those creates beans definitions.
-- Simple component scanning within Configuration package and all subpackages
-```java
 
-@ComponentScan
-public class ApplicationConfiguration { }
-```
+## **What does component-scanning do?**
+
+
+### **ComponentScanning** 
+
+Process in which Spring is scanning Classpath in search for classes annotated with stereotypes annotations (@Component, @Repository, @Service, @Controller, ...) and based on those creates beans definitions.
+
+
+- Simple component scanning within Configuration package and all subpackages.
+
+  ```java
+  @Component
+  public class ComponentBean{}
+
+  @Controller
+  public class ControllerBean{}
+
+  @Repository
+  public class DaoBean{}
+
+  @Service
+  public class ServiceBean{}
+  ```
+  ```java
+  @ComponentScan
+  public class ApplicationConfiguration { }
+  ```
+
+
+
 - AdvancedComponentScanningRules
-```java
-@ComponentScan(
-basePackages = "com.spring.professional.exam.tutorial.module01.question15.advanced.beans", 
-includeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Bean"),
-excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*(Controller|Service).*")
-)
-public class ApplicationConfiguration { }
-```
+  ```java
+  @ComponentScan(
+  basePackages = "com.isaachome.advanced.beans", 
+  includeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Bean"),
+  excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*(Controller|Service).*")
+  )
+  public class ApplicationConfiguration { }
+  ```

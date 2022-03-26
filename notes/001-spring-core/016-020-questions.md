@@ -12,64 +12,49 @@
 
 
 ----
-### **Question 16** 
-- What is the behavior of the annotation @Autowired with regards to field injection, constructor injection and method injection?
+## **Question 16** 
 
-- @Autowired is an annotation 
-- processed by AutowiredAnnotationBeanPostProcessor,
-- can be put onto class 
-  - constructor, 
-  - field, 
-  - setter method or 
-  - config method.
-- this annotation enables automatic Spring Dependency Resolution that is primary based on types.
-```java
+## **What is the behavior of the annotation @Autowired?**
 
-// constructor
-@Autowired
-public RecordsService(
-  DbRecordsReader recordsReade,
-  DbRecordsProcessor recordsProcessor) {
 
-  }
+`@Autowired` is an annotation that is processed by `AutowiredAnnotationBeanPostProcessor`, which can be put onto class constructor, field, setter method or config method. Using this annotation enables automatic Spring Dependency Resolution that is primary based on types.
 
-// field
-@Autowired
-public DbRecordsReader recordsReader;
 
-// setter method
-@Autowired
-public void setRecordsReader(DbRecordsReader recordsReader) {}
-```
-- `@Autowired` has a property `required` which can be used to tell Spring if dependency is required or optional.
+`@Autowired` has a property `required` which can be used to tell Spring if dependency is required or optional. By default dependency is required.
 
-- By default dependency is required.
 ```java
 @Autowired(required = false)
 private RecordsValidator recordsValidator; 
+
+@Autowired
+private StudentRepo studentRepo;
 ```
-- If `@Autowired`  on top of constructor or method that contains multiple arguments, then 
-- all arguments are considered required dependency 
-    - unless argument is of type  Optional,
-    ```java
-    @Autowired
-    private Optional<RecordsHash> recordsHash;
-    ```
-    - is marked as @Nullable, or 
-    ```java
-    @Autowired
-    @Nullable
-    private RecordsUtil recordsUtil;
-    ```
-    - is marked as @Autowired(required = false).
-    ```java
-    @Autowired(required = false)
-    private RecordsValidator recordsValidator; 
-    ```
 
-- `@Autowired` on top of Collection or Map .
-- Spring will inject all beans matching the type into Collection and key-value pairs as BeanName-Bean into Map. 
+If `@Autowired`  on top of constructor or method that contains multiple arguments, then all arguments are considered required dependency.
 
+```java
+@Autowired
+public RecordsService(
+  DbRecordsReader recordsReader,
+  DbRecordsProcessor recordsProcessor) {
+     this.recordsReader = recordsReader;
+     this.recordsProcessor = recordsProcessor;
+}
+```
+
+The arguments of type  `Optional`, `@Nullable` and `@Autowired(required = false)` are  not considered as required dependency.
+
+```java
+ @Autowired
+ public RecordService(
+    DbRecordsReader recordsReader,
+    DbRecordsProcessor recordsProcessor,
+    Optional<RecordsUtil> recordsUtil,
+    @Nullable RecordsHash recordsHash,
+    @Autowired(required = false) RecordsValidator recordsValidator) {}
+```
+
+If `@Autowired` is used on top of Collection or Map then Spring will inject all beans matching the type into Collection and key-value pairs as BeanName-Bean into Map.
 
 ```java
 @Autowired
@@ -81,9 +66,117 @@ public void setRecordsReaders(List<RecordsReader> recordsReaders) {
 }
 ```
 
+`@Autowired` uses following steps when resolving dependency:
 
-- Order of elements depends on usage of 
-- @Order, 
+  1. Match exactly by type, if only one found, finish.
+
+  2. If multiple beans of same type found, check if any contains `@Primary` annotation, if yes, inject `@Primary` bean and finish.
+
+  3. If no exactly one match exists, check if `@Qualifier` exists for field, if yes use `@Qualifier` to find matching bean.
+
+  4. If still no exactly one bean found, narrow the search by using bean name.
+
+  5. If still no exactly one bean found, throw exception (NoSuchBeanDefinitionException,NoUniqueBeanDefinitionException,...)
+
+## **`@Autowired` can be used with constructor like this:**
+
+```java
+@Autowired
+public RecordsService(
+  DbRecordsReader recordsReader,
+  DbRecordsProcessor recordsProcessor) {
+     this.recordsReader = recordsReader;
+     this.recordsProcessor = recordsProcessor;
+}
+```
+Constructor can have any access modifier (public, protected, private, package-private).
+
+If there is only one constructor in class, there is no need to use `@Autowired` on top of it, Spring will use this default constructor anyway and will inject dependencies into it.
+
+```java
+public EmployeeService(
+  EmployeeRepo employeeRepo,
+  SalaryService salaryService) {
+     this.employeeRepo = employeeRepo;
+     this.salaryService = salaryService;
+}
+```
+If class defines multiple constructor, then you are obligated to use `@Autowired` to tell Spring which constructor should be used to create Spring Bean.
+```java
+
+public EmployeeService(
+  EmployeeRepo employeeRepo,
+  SalaryService salaryService) {
+     this.employeeRepo = employeeRepo;
+     this.salaryService = salaryService;
+}
+@Autowired
+public EmployeeService(
+  EmployeeRepo employeeRepo) {
+     this.employeeRepo = employeeRepo;
+}
+```
+ If you will have a class with multiple constructor without any of constructor marked as @Autowired then Spring will throw `NoSuchMethodException`.
+
+By default all arguments in constructor are required, however you can use Optional, @Nullable or @Autowired(required = false) to indicate that parameter is not required.
+```java
+@Autowired
+private RecordsService(
+  DbRecordsReader recordsReader,
+  Optional<RecordsUtil> recordsUtil,
+  @Nullable RecordsHash recordsHash,
+  @Autowired(required = false) RecordsValidator recordsValidator) {}
+```
+      
+## **@Autowired with field injection is used like this:**
+
+Autowired fields can have any visibility level. 
+
+  ```java
+  @Autowired
+  public DbRecordsReader recordsReader;
+  @Autowired
+  protected DbRecordsBackup recordsBackup; 
+  @Autowired
+  private DbRecordsProcessor recordsProcessor; 
+  @Autowired
+  DbRecordsWriter recordsWriter;
+  ```
+Injection is happening after Bean is created but before any init method (@PostConstruct,
+InitializingBean, @Bean(initMethod)) is called.  
+
+By default field is required, however you can use Optional, @Nullable or @Autowired(required = false) to indicate that field is not required.
+
+  ```java
+  @Autowired
+  private Optional<RecordsHash> recordsHash;
+  @Autowired
+  @Nullable
+  private RecordsUtil recordsUtil;
+  @Autowired(required = false)
+  private RecordsValidator recordsValidator;
+  ```
+
+
+## @Autowired can be used with method injection like this:
+
+```java
+@Autowired
+public void setRecordsReader(DbRecordsReader recordsReader) { this.recordsReader = recordsReader;
+}
+```
+`@Autowired` method can have any visibility level and also can contain multiple parameters.
+
+If method contains multiple parameters, then by default it is assumed that in `@Autowired` method all parameters are required.
+
+If Spring will be unable to resolve all dependencies for this method, NoSuchBeanDefinitionException or `NoUniqueBeanDefinitionException` will be thrown.
+
+When using `@Autowired(required = false)` with method, it will be invoked only if Spring can resolve all parameters.
+
+If you want Spring to invoke method only with arguments partially resolved, you need to use @Autowired method with parameter marked as `Optional`,` @Nullable` or `@Autowired(required = false)` to indicate that this parameter is not required.
+
+Order of elements depends on usage of `@Order`, `@Priority` annotations and implementation of Ordered interface.
+
 ```java
 @Component
 @Order(1)
@@ -94,7 +187,7 @@ public class SocketRecordsReader implements RecordsReader {
 	}
 }
 ```
-- @Priority annotations and 
+`@Priority` annotations usage
 ```java
 @Component
 @Priority(2)
@@ -105,35 +198,7 @@ public class WebServiceRecordsReader implements RecordsReader {
 	}
 }
 ```
-- implementation of Ordered interface.
 
-`@Autowired` uses following steps when resolving dependency:
-
-- Match exactly by type, if `only one found`, finish.
-
-- If `multiple beans` of same type found,
-
-  - check if any contains @Primary annotation, 
-
-  - if yes, inject @Primary bean and finish.
-
-- If no exactly one match exists, 
-
-  - check if @Qualifier exists for field, 
-
-  - if yes use @Qualifier to find matching bean.
-
-- If still no exactly one bean found, 
-
-  - narrow the search by using bean name.
-
-- If still no exactly one bean found,
-
-  - throw exception
-
-  - (NoSuchBeanDefinitionException,
-
-  - NoUniqueBeanDefinitionException, ...).
 
 ---- 
 
