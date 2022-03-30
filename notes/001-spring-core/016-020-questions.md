@@ -203,43 +203,41 @@ public class WebServiceRecordsReader implements RecordsReader {
 ---- 
 
 ### **Question 17**
-### **What do you have to do, if you would like to inject something into a private field? How does this impact testing?**
+### **What do you have to do, if you would like to inject something into a private field?**
 
-- Injection of dependency into private field can be done with @Autowired annotation:
+
+Injection of dependency into private field can be done with `@Autowired` annotation:
+
 ```java
 @Autowired
 private ReportWriter reportWriter;
 ```
-- Injection of property into private field can be done with @Value annotation:
+
+Injection of property into private field can be done with `@Value` annotation:
+
 ```java
 @Value("${report.global.name}")
 private String reportGlobalName;
 ```
-- Private Field cannot be accessed from outside of the class, to resolve this when writing Unit Test you can use following solutions:
- - Use `SpringRunner` with `ContextConfiguration` and `@MockBean`
- ```java
 
+Private Field cannot be accessed from outside of the class, to resolve this when writing Unit Test you can use following solutions:
+
+### Use `SpringRunner` with `ContextConfiguration` and `@MockBean`
+```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ApplicationConfig.class)
-public class ReportServiceTest01 {
+public class ReportServiceTest {
     @Autowired
     private ReportService reportService;
     @MockBean
     private ReportWriter reportWriter;
-
-    @Test
-    public void shouldPassReportToWriter() {
-        reportService.execute();
-
-        verify(reportWriter).write(any(Report.class), any());
-    }
 }
- ```
- - Use `ReflectionTestUtils` to modify private fields
+```
+ 
+ ### Use `ReflectionTestUtils` to modify private fields
  ```java
- public class ReportServiceTest03 {
+    //  mock data
     private ReportService reportService;
-
     @Before
     public void setUp() {
         reportService = new ReportService();
@@ -256,30 +254,23 @@ public class ReportServiceTest01 {
     }
 }
  ```
- - Use MockitoJUnitRunner to inject mocks
+ ### Use MockitoJUnitRunner to inject mocks
  ```java
- @RunWith(MockitoJUnitRunner.class)
-public class ReportServiceTest02 {
+@RunWith(MockitoJUnitRunner.class)
+public class ReportServiceTest {
     @InjectMocks
     private ReportService reportService;
     @Mock
     private ReportWriter reportWriter;
-
-    @Test
-    public void shouldPassReportToWriter() {
-        reportService.execute();
-
-        verify(reportWriter).write(any(Report.class), any());
-    }
 }
  ```
- - Use @TestPropertySource to inject test properties into private fields
+ ### Use `@TestPropertySource` to inject test properties into private fields
 
 ```java
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ApplicationConfig.class)
 @TestPropertySource(properties = "report.global.name=" + REPORT_NAME)
-public class ReportServiceTest04 {
+public class ReportServiceTest {
     static final String REPORT_NAME = "Mock_Report";
 
     @Autowired
