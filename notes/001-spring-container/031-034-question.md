@@ -100,7 +100,7 @@ You can reference following using SpEL:
 - Spring bean Method 
     - `@person.getName()`
 - SpEL Variables 
-    - #personName
+    - `#personName`
 - 
 ---
 
