@@ -63,5 +63,6 @@
     	<module>001-the-context-demo</module>
     	<module>001-spring-context</module>
     	<module>spring-annotation-study</module>
+    	<module>spring-aop</module>
     </modules>
 </project>
