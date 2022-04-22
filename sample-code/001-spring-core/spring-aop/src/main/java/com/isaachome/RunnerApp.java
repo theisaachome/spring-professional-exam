@@ -9,9 +9,9 @@ public class RunnerApp {
 	public static void main(String[] args) {
 		try(var context = new AnnotationConfigApplicationContext(ProjectConfig.class)) {
 			HelloService helloService = context.getBean(HelloService.class);
-			helloService.hello("John");
-//			var result =
-//			System.out.println(result);
+			
+			String message =helloService.hello("John");
+			System.out.println("Result is " + message);
 		}
 	}
 }
