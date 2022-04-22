@@ -1,17 +1,19 @@
-package com.isaachome;
+package com.isaachome.business;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.isaachome.data.EmployeeRepo;
+
 @Service
-public class StudentService {
+public class EmployeeService {
 
 	@Autowired
-	private EmployeeRepo repo;
+	private EmployeeRepo employeeRepo;
 	
 	public String caculateSomething() {
 //		business logic
-		return repo.retrieveSomething();
+		return employeeRepo.retrieveSomething();
 	}
 	
 }

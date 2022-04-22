@@ -1,11 +1,11 @@
-package com.isaachome;
+package com.isaachome.data;
 
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class EmployeeRepo {
+public class StudentRepo {
 
 	public String retrieveSomething() {
-		return "GetAll";
+		return "Get Student Repo";
 	}
 }
