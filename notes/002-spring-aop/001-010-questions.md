@@ -5,6 +5,7 @@
 - [Question 003](#question-003)
 - [Question 004](#question-004)
 - [Question 005](#question-005)
+- 
 
 ---
 
@@ -208,3 +209,43 @@ It is possible to force Spring to use CGLIB Proxy with usage of
 ```java
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 ```
+
+---
+## Question 08 
+## What is the JoinPoint argument used for?
+
+`JoinPoint` argument is an object that can be used to retrieve additional information about join point during execution.
+
+`JoinPoint` needs to be the first parameter of Advice, only in that case Spring Framework will inject `JoinPoint` into advice method.
+
+Join Point is supported in following advice types:
+
+- Before
+- After
+- After Returning
+- After Throwing
+
+Examples of information that you can retrieve from JoinPoint:
+- String representation of Join Point
+- Arguments of Joint Point (for example Method Arguments)
+- Signature of Joint Point (for example Method Signature)
+- Kind / Type of Joint Point
+- Target / This object being proxied
+
+---
+## Question 09
+
+## What is a ProceedingJoinPoint? When is it used?
+
+
+ProceedingJoinPoint is an object that can be provided to @Around advice as first argument, it is a type of JoinPoint which can be used to change method arguments during method execution in runtime or block execution of original method entirely.
+
+
+ProceedingJoinPoint is used in `@Around` advice, it contains all methods from `JoinPoint` and also adds:
+- proceed – executes original method
+- proceed(args) – executes original method with provided arguments
+
+ProceedingJoinPoint can be used in following use cases: 
+- Conditionally block method execution
+- Filter arguments
+- Inject additional argument
