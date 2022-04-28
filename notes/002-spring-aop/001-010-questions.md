@@ -5,6 +5,9 @@
 - [Question 003](#question-003)
 - [Question 004](#question-004)
 - [Question 005](#question-005)
+- [Question 007](#question-007)
+- [Question 008](#question-008)
+- [Question 009](#question-009)
 - 
 
 ---
@@ -209,9 +212,93 @@ It is possible to force Spring to use CGLIB Proxy with usage of
 ```java
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 ```
-
 ---
-## Question 08 
+### Question 007
+
+Pointcut designator types supported by Spring AOP:
+
+- `execution`
+- `within`
+- `args`
+- `bean`
+- `this`
+- `target`
+- `@annotation`
+- `@args`
+- `@within`
+- `@target`
+
+### `Pointcut` designator
+`execution` 
+- matches method execution.
+
+General Form:
+```java
+execution([visibility modifiers] [return type] [package].[class].[method]([arguments]) [throws exceptions]
+```
+
+Description:
+- [visibility modifiers]
+  - `public/protected`  
+   If omitted all are matched, can be used with negation.   
+   For example `!protected`
+
+- [return type]
+  - `void`, `primitive` or `Object` type, cannot be omitted.
+  - can be used with wildcard `*`
+  - can be used with negation, for example `!int`
+
+
+- `[package]`
+  - `package` in which class is located.
+  - It be omitted if class is located within same package as aspect.
+  - wildcard * may be used to match all packages.
+  - wildcard .. may be used to match all sub-packages.
+
+- `[class]`
+  - Class name to match against, 
+  - may be omitted,
+  - may be used with * wildcard, matches subclasses of the
+  class as well.
+
+- `[method]`
+  - Name of the method,whole or partial method name can be used with * wildcard.
+
+- `[arguments]`
+  - May be empty to match methods without any arguments,
+  - may be used with wildcard .. to match zero or more arguments, 
+  - may be used with wildcard * to match all types of specific argument, 
+  - may be used with ! Negation
+
+- `[throws exceptions]`
+  - Match method that throws exceptions from given list, 
+  - can be used with negation !
+
+
+## Pointcut designator
+## `within`
+- matches execution within specified class/classes, optionally you can specify class package.
+
+General Form:
+```java
+within([package].[class])
+```
+Description:
+- [package]
+  - package where class is located, may be used with `.. wildcard` (includes all sub-packages) or with `* wildcard`, may be omitted
+- [class]
+  - class against which match should happen, may be used with * wildcard
+
+## Example
+```java
+@Before("within(com..HelloChildBean)")
+public void withinExample1() {}
+
+@Before("within(com..*)")
+public void withinExample2() { }
+```
+---
+## Question 008 
 ## What is the JoinPoint argument used for?
 
 `JoinPoint` argument is an object that can be used to retrieve additional information about join point during execution.
@@ -225,15 +312,15 @@ Join Point is supported in following advice types:
 - After Returning
 - After Throwing
 
-Examples of information that you can retrieve from JoinPoint:
-- String representation of Join Point
-- Arguments of Joint Point (for example Method Arguments)
-- Signature of Joint Point (for example Method Signature)
-- Kind / Type of Joint Point
+Examples of information that you can retrieve from `JoinPoint`:
+- String representation of `JoinPoint`
+- Arguments of `JointPoint` (for example Method Arguments)
+- Signature of `JointPoint` (for example Method Signature)
+- Kind / Type of `JointPoint`
 - Target / This object being proxied
 
 ---
-## Question 09
+## Question 009
 
 ## What is a ProceedingJoinPoint? When is it used?
 
