@@ -198,20 +198,85 @@ Types of weaving:
 
 ## Question 3
 ## How does Spring solve(implement) a cross cutting concern?
-Spring Implements cross-cutting concerns with usage of Spring AOP module. Spring AOP uses AspectJ expression syntax for Pointcut expressions, which are matched against Join Point, code is altered with logic implemented in advices. In Spring AOP Joint Point is always method invocation.
+
+Spring Implements cross-cutting concerns with usage of Spring AOP module.   
+Spring AOP uses AspectJ expression syntax for `Pointcut` expressions, which are matched against `JoinPoint`, code is altered with logic implemented in advices.   
+In Spring AOP `JointPoint` is always method invocation.
 
 Spring AOP uses Runtime Weaving, and for each type subject to aspects, to intercepts calls, spring creates one type of proxy:
 
-- JDK Proxy – created for classes that implements interface
+### JDK Proxy
 
-![](./jdk-proxy.png)
-- CGLIB Proxy – created for class that are not implementing any interface
-![](./cglib.png)
+- created for classes that implements interface
+
+
+<img src="./jdk-proxy.png" width="750">
+<!-- ![](./jdk-proxy.png) -->
+
+### CGLIB Proxy
+
+- created for class that are not implementing any interface
+
+<img src="./cglib.png" width="750">
+<!-- ![](./cglib.png) -->
 
 It is possible to force Spring to use CGLIB Proxy with usage of
 ```java
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 ```
+---
+### Question 004
+
+## Which are the limitations of the two proxy-types?
+
+### Two proxy techniques:
+
+- JDK dynamic proxy
+- CGLIB proxy
+
+### JDK dynamic proxy
+
+JDK dynamic proxy uses technology found in the Java runtime environment and thus require no additional libraries.
+
+Proxies are created at runtime by generating a class that implements all the interfaces that the target object implements.
+
+JDK dynamic proxies is the default proxy mechanism used by Spring AOP.
+
+### CGLIB proxy
+
+It’s included in the spring-core JAR.
+
+CGLIB proxies are created by generating a subclass of the class implementing the target object.
+
+The CGLIB proxy mechanism will be used by Spring AOP when the Spring bean for which to create a proxy does not implement any interfaces.
+
+It is possible to instruct Spring AOP to use CGLIB proxies by default: @EnableAspectJAutoProxy(proxyTargetClass = true)
+
+Spring Java configuration classes, annotated with @Configuration, will always be proxied using CGLIB.
+
+## Limitations
+
+Both of them has the same limitation: Invocation of advised methods on self.
+
+If a method in the proxy calls another method in the proxy, and both match the pointcut expression of an advice, the advice will be executed only for the first method.
+
+This is the proxy’s nature: it executes the extra behavior only when the caller calls the target method.
+
+### JDK Dynamic Proxies Limitations
+
+- Must implement an interface.
+- Only public methods will be proxied.
+- any methods found in the target object but not in any interface implemented by the target object cannot be proxied.
+- Aspects can be applied only to Spring Beans. That means
+- Even if Spring AOP is not set to use CGLIB proxies, if a Join Point is in a class that does not implement an interface, Spring AOP will try to create a CGLIB proxy.
+- If a method in the proxy calls another method in the proxy, and both match the pointcut expression of an advice, the advice will be executed only for the first method. This is the proxy’s nature: it executes the extra behavior only when the caller calls the target method.
+
+### CGLIB Limitations
+
+- Class and Methods cannot be final
+- Only public and protected methods can be proxied.
+- It takes more time to create a proxy object, althrought it has better performance
+
 ---
 ### Question 007
 
